@@ -18,21 +18,21 @@ class TrackController
         );
 
         if (count($tracks) == 0) {
-            return response(null, 404)->json([
+            return response()->json([
                 'error' => 'no_such_item',
                 'message' => "No track with ID $id exists",
-            ]);
+            ], 404);
         }
 
         $track = $tracks[0];
 
         return response()
-            ->header('Last-Modified', $track->updated_at)
             ->json([
                 'id' => $track->id,
                 'name' => $track->name,
                 'artist' => $track->artist,
                 'urls' => $urls,
-            ]);
+            ])
+            ->header('Last-Modified', $track->updated_at);
     }
 }

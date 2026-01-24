@@ -15,14 +15,15 @@ class TrackSeeder extends Seeder
     {
         DB::transaction(function () {
             $time = date_create_immutable()->format(DATE_ATOM);
-            $trackId = DB::table('tracks')->insertGetId([
+            DB::table('tracks')->insertOrIgnore([
+                'id' => 1,
                 'name' => 'Baby ft. Ludacris',
                 'artist' => 'Justin Bieber',
                 'created_at' => $time,
                 'updated_at' => $time,
             ]);
-            DB::table('urls')->insert([
-                'track_id' => $trackId,
+            DB::table('urls')->insertOrIgnore([
+                'track_id' => 1,
                 'website' => 'youtube',
                 'url' => 'https://www.youtube.com/watch?v=kffacxfA7G4',
                 'created_at' => $time,
