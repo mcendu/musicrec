@@ -18,6 +18,12 @@ Route::prefix('/v1')->group(function () {
         ->prefix('/tracks')
         ->group(function () {
             Route::get('/{id}', 'show')->name('show');
+
+            Route::middleware(['auth:sanctum', 'ability:manage-tracks'])
+                ->group(function () {
+                    Route::post('/', 'create')->name('create');
+                    Route::delete('/{id}', 'delete')->name('delete');
+                });
         });
 });
 
