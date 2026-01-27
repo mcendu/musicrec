@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+"""
+Sensitive configuation, containing API keys and secrets.
+"""
+from typing import LiteralString
+
+# Last.fm API credentials
+#
+# The Last.fm API is used to collect the most popular tags of tracks. Obtain
+# your own API key and secret from <https://www.last.fm/api/account/create>.
+
+LASTFM_KEY: LiteralString = ""
+"Key for accessing the Last.fm API."
+
+LASTFM_SECRET: LiteralString = ""
+"Client secret for accessing the Last.fm API."
+
+# Database credentials
+#
+# Credentials for the database used to store downloaded data. SQLite
+# is used by default; if you use another database software, comment
+# the SQLite section out and uncomment the section relevant to the
+# database you use.
+
+## SQLite
+SQLITE_DATABASE = "database.db"
+
+SQLALCHEMY_STRING: LiteralString = f"sqlite+pysqlite:///{SQLITE_DATABASE}"
+"SQLAlchemy connection string for connecting to the database."
+
+## MySQL / MariaDB
+# MY_HOST = "localhost"
+# MY_PORT = "3306"
+# MY_USERNAME = ""
+# MY_PASSWORD = ""
+# MY_DATABASE = ""
+#
+# SQLALCHEMY_STRING: LiteralString = (
+#     f"mysql+pymysql://"
+#     + f"{MY_USERNAME}:{MY_PASSWORD}@{MY_HOST}:{MY_PORT}/{MY_DATABASE}"
+#     + f"?charset=utf8mb4"
+# )
+# "SQLAlchemy connection string for connecting to the database."
+
+## PostgreSQL
+# PG_HOST = "localhost"
+# PG_PORT = "5432"
+# PG_USERNAME = ""
+# PG_PASSWORD = ""
+# PG_DATABASE = ""
+#
+# SQLALCHEMY_STRING: LiteralString = (
+#     f"postgresql+psycopg2://"
+#     + f"{PG_USERNAME}:{PG_PASSWORD}@{PG_HOST}:{PG_PORT}/{PG_DATABASE}"
+#     + f"?client_encoding=utf8"
+# )
+# "SQLAlchemy connection string for connecting to the database."
+
+## Other databases
+##
+## Refer to SQLAlchemy documentation for details on connection strings:
+## https://docs.sqlalchemy.org/en/20/core/engines.html#database-urls
+# SQLALCHEMY_STRING: LiteralString = ""
+# "SQLAlchemy connection string for connecting to the database."
+
+__all__ = [
+    "LASTFM_KEY",
+    "LASTFM_SECRET",
+    "SQLALCHEMY_STRING",
+]
