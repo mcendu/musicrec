@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers;
+use App\Http\Controllers\RecommendController;
 
 Route::prefix('/v1')->group(function () {
     Route::controller(Controllers\TokenController::class)
@@ -25,8 +26,7 @@ Route::prefix('/v1')->group(function () {
                     Route::delete('/{id}', 'delete')->name('delete');
                 });
         });
-});
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+    Route::get('/recommend', [Controllers\RecommendController::class, 'recommend'])
+        ->name('recommend.recommend');
+});
