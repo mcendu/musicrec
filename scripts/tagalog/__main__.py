@@ -7,6 +7,19 @@ from .lastfm import fetch_last_fm
 from .copy import copy_to_production
 
 
+def help() -> None:
+    print(
+        """Available subcommands:
+
+    - fetch
+    Fetch track data from Last.fm.
+
+    - copy <sqlalchemy_url>
+    Copy data to production database.
+"""
+    )
+
+
 def copy() -> None:
     try:
         connstr = sys.argv[2]
@@ -20,6 +33,7 @@ def copy() -> None:
 commands = {
     "fetch": fetch_last_fm,
     "copy": copy,
+    "help": help,
 }
 
 if len(sys.argv) <= 1:
