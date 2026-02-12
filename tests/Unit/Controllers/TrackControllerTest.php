@@ -80,7 +80,8 @@ test('unauthenticated user cannot create tracks', function () {
             'name' => '강남스타일', // Gangnam Style
             'artist' => '싸이', // Psy
         ])
-        ->assertStatus(403);
+        ->assertStatus(401)
+        ->assertJson(['error' => 'unauthorized']);
 });
 
 test('track can be deleted by authenticated user', function () {
@@ -115,9 +116,7 @@ test('unauthenticated user cannot delete tracks', function () {
     /** @var \Tests\TestCase $this */
     $this->seed(TrackSeeder::class);
 
-    $this->actingAsGuest()->delete(
-        '/api/v1/tracks/1',
-        ['Accept' => 'application/json']
-    )
-        ->assertStatus(403);
+    $this->actingAsGuest()->delete('/api/v1/tracks/1')
+        ->assertStatus(401)
+        ->assertJson(['error' => 'unauthorized']);
 });

@@ -15,10 +15,16 @@ class TrackSeeder extends Seeder
     {
         DB::transaction(function () {
             $time = date_create_immutable()->format(DATE_ATOM);
+            DB::table('artists')->insertOrIgnore([
+                'id' => 1,
+                'name' => 'Justin Bieber',
+                'created_at' => $time,
+                'updated_at' => $time,
+            ]);
             DB::table('tracks')->insertOrIgnore([
                 'id' => 1,
                 'name' => 'Baby ft. Ludacris',
-                'artist' => 'Justin Bieber',
+                'artist_id' => 1,
                 'created_at' => $time,
                 'updated_at' => $time,
             ]);

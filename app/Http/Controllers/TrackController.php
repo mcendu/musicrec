@@ -12,7 +12,14 @@ class TrackController
     function show(int $id): JsonResponse
     {
         $tracks = DB::select(
-            'SELECT id, name, artist, updated_at FROM tracks WHERE id=:id',
+            'SELECT
+                tracks.id AS id,
+                tracks.name AS name,
+                artists.name AS artist,
+                tracks.updated_at AS updated_at
+            FROM tracks
+                LEFT JOIN artists ON artists.id = tracks.artist_id
+            WHERE tracks.id = :id',
             ['id' => $id]
         );
         $urls = DB::select(
@@ -46,12 +53,30 @@ class TrackController
         $time = date_create_immutable()->format(DATE_ATOM);
         $id = null;
 
+        // check artist entry
+        $artists = DB::table('artists')
+            ->where('name', '=', $artist)->get();
+        if (count($artists) != 0) {
+            $artist_id = $artists[0]->id;
+        } else {
+            $artist_id = DB::table('artists')->insertGetId([
+                'name' => $artist,
+                'created_at' => $time,
+                'updated_at' => $time,
+            ]);
+        }
+
         try {
             $id = DB::scalar(
-                'INSERT INTO tracks (name, artist, created_at, updated_at)
+                'INSERT
+                    INTO tracks (name, artist_id, created_at, updated_at)
                     VALUES (:name, :artist, :created_at, :created_at)
                     RETURNING id',
-                ['name' => $name, 'artist' => $artist, 'created_at' => $time]
+                [
+                    'name' => $name,
+                    'artist' => $artist_id,
+                    'created_at' => $time,
+                ]
             );
         } catch (\Illuminate\Database\QueryException $e) {
             return response()->json([
