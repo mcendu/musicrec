@@ -14,6 +14,13 @@ Route::prefix('/v1')->group(function () {
         })
         ->middleware(['auth:sanctum']);
 
+    Route::controller(Controllers\ArtistController::class)
+        ->name('artist.')
+        ->prefix('/artists')
+        ->group(function () {
+            Route::get('/{id}', 'show')->name('show');
+        });
+
     Route::controller(Controllers\TrackController::class)
         ->name('track.')
         ->prefix('/tracks')
