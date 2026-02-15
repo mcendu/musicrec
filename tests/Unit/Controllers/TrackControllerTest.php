@@ -17,7 +17,9 @@ test('track can be retrieved', function () {
         ->assertJson([
             'id' => 1,
             'name' => 'Baby ft. Ludacris',
-            'artist' => 'Justin Bieber',
+            'artist' => [
+                'name' => 'Justin Bieber',
+            ],
             'urls' => [
                 [
                     'website' => 'youtube',
@@ -25,6 +27,15 @@ test('track can be retrieved', function () {
                 ]
             ],
         ]);
+});
+
+test('attempt to retrieve unknown track fails', function () {
+    /** @var Tests\TestCase $this */
+    $this->seed(TrackSeeder::class);
+
+    $this->get('/api/v1/tracks/2147483647')
+        ->assertStatus(404)
+        ->assertJson(['error' => 'no_such_record']);
 });
 
 test('track can be created by authenticated user', function () {
@@ -46,7 +57,9 @@ test('track can be created by authenticated user', function () {
         ->assertStatus(200)
         ->assertJson([
             'name' => '강남스타일',
-            'artist' => '싸이',
+            'artist' => [
+                'name' => '싸이',
+            ],
         ]);
 });
 
@@ -98,11 +111,15 @@ test('track can be deleted by authenticated user', function () {
         ->assertJson(['error' => 'no_such_record']);
 });
 
-test('attempting to delete nonexistent track fails', function () {
+test('attempt to delete nonexistent track fails', function () {
     /** @var Tests\TestCase $this */
     $this->seed(TrackSeeder::class);
     /** @var \App\Models\User $user */
     $user = User::factory()->create();
+
+    $this->actingAs($user)->delete('/api/v1/tracks/2147483647')
+        ->assertStatus(404)
+        ->assertJson(['error' => 'no_such_record']);
 
     $this->actingAs($user)->delete('/api/v1/tracks/1')
         ->assertStatus(204);

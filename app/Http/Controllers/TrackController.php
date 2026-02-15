@@ -11,21 +11,7 @@ class TrackController
 {
     function show(int $id): JsonResponse
     {
-        $tracks = DB::select(
-            'SELECT
-                tracks.id AS id,
-                tracks.name AS name,
-                artists.name AS artist,
-                tracks.updated_at AS updated_at
-            FROM tracks
-                LEFT JOIN artists ON artists.id = tracks.artist_id
-            WHERE tracks.id = :id',
-            ['id' => $id]
-        );
-        $urls = DB::select(
-            'SELECT website, url FROM urls WHERE track_id=:id',
-            ['id' => $id]
-        );
+        $tracks = DB::table('tracks')->where('id', '=', $id)->get();
 
         if (count($tracks) == 0) {
             return response()->json([
@@ -35,12 +21,21 @@ class TrackController
         }
 
         $track = $tracks[0];
+        $artist = DB::table('artists')
+            ->where('id', '=', $track->artist_id)->first();
+        $urls = DB::select(
+            'SELECT website, url FROM urls WHERE track_id=:id',
+            ['id' => $id]
+        );
 
         return response()
             ->json([
                 'id' => $track->id,
                 'name' => $track->name,
-                'artist' => $track->artist,
+                'artist' => [
+                    'id' => $artist->id,
+                    'name' => $artist->name,
+                ],
                 'urls' => $urls,
             ])
             ->header('Last-Modified', $track->updated_at);
