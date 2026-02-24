@@ -19,6 +19,7 @@ Route::prefix('/v1')->group(function () {
         ->prefix('/artists')
         ->group(function () {
             Route::get('/{id}', 'show')->name('show');
+            Route::get('/{id}/tracks', 'tracks')->name('tracks');
         });
 
     Route::controller(Controllers\TrackController::class)
