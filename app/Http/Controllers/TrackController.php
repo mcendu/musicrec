@@ -38,7 +38,10 @@ class TrackController
                 ],
                 'urls' => $urls,
             ])
-            ->header('Last-Modified', $track->updated_at);
+            ->header(
+                'Last-Modified',
+                date_create($track->updated_at)->format(DATE_RFC7231)
+            );
     }
 
     function create(Request $request): JsonResponse
