@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import argparse
 import sys
 import traceback
 
@@ -14,7 +13,7 @@ def help() -> None:
     - fetch
     Fetch track data from Last.fm.
 
-    - copy <sqlalchemy_url>
+    - copy <sqlalchemy_url> <path/to/taglist>
     Copy data to production database.
 """
     )
@@ -23,11 +22,16 @@ def help() -> None:
 def copy() -> None:
     try:
         connstr = sys.argv[2]
+        taglist_path = sys.argv[3]
     except IndexError:
-        print("Missing destination connection string", file=sys.stderr)
+        traceback.print_exc()
+        print("Missing arguments", file=sys.stderr)
         exit(1)
 
-    copy_to_production(connstr)
+    with open(taglist_path, "r") as f:
+        taglist = [tag.rstrip() for tag in f]
+
+    copy_to_production(connstr, taglist)
 
 
 commands = {
@@ -37,7 +41,7 @@ commands = {
 }
 
 if len(sys.argv) <= 1:
-    fetch_last_fm()
+    help()
 else:
     cmd = commands.get(sys.argv[1])
     if cmd is None:
