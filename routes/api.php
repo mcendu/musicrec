@@ -35,6 +35,8 @@ Route::prefix('/v1')->group(function () {
                 });
         });
 
+    Route::get('/random', [Controllers\RecommendController::class, 'random'])
+        ->name('recommend.random');
     Route::get('/recommend', [Controllers\RecommendController::class, 'recommend'])
         ->name('recommend.recommend');
 });
