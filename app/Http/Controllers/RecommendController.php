@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class RecommendController
 {
@@ -18,7 +19,11 @@ class RecommendController
             ['count' => $rowcount]
         );
 
-        return response()->json($tracks);
+        if ($req->has("isApiReq")) {
+            return response()->json($tracks);
+        } else {
+            return Inertia::render('Recommend', ['tracks' => $tracks]);
+        }
     }
 
     /** Recommend a list of tracks similar to a specific track. */

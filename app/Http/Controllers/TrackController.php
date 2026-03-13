@@ -6,10 +6,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
+use Inertia\Inertia;
 
 class TrackController
 {
-    function show(int $id): JsonResponse
+    function show(Request $req, int $id)
     {
         $tracks = DB::table('tracks')->where('id', '=', $id)->get();
 
@@ -28,20 +29,26 @@ class TrackController
             ['id' => $id]
         );
 
-        return response()
-            ->json([
-                'id' => $track->id,
-                'name' => $track->name,
-                'artist' => [
-                    'id' => $artist->id,
-                    'name' => $artist->name,
-                ],
-                'urls' => $urls,
-            ])
-            ->header(
-                'Last-Modified',
-                date_create($track->updated_at)->format(DATE_RFC7231)
-            );
+        $data = [
+            'id' => $track->id,
+            'name' => $track->name,
+            'artist' => [
+                'id' => $artist->id,
+                'name' => $artist->name,
+            ],
+            'urls' => $urls,
+        ];
+
+        if ($req->has('isApiReq')) {
+            return response()
+                ->json($data)
+                ->header(
+                    'Last-Modified',
+                    date_create($track->updated_at)->format(DATE_RFC7231)
+                );
+        } else {
+            return Inertia::render('Track', $data);
+        }
     }
 
     function create(Request $request): JsonResponse
