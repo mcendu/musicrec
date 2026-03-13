@@ -31,16 +31,16 @@ class ArtistController
                     date_create($artist->updated_at)->format(DATE_RFC7231)
                 );
         } else {
-            return Inertia::render('Artist', $data);
+            return Inertia::render('ArtistData', $data);
         }
     }
 
     function tracks(Request $req, int $id)
     {
-        $artistExists = DB::table('artists')->where('id', '=', $id)->exists();
         $limit = $req->input('limit', 20);
+        $artist = DB::table('artists')->where('id', '=', $id)->first();
 
-        if (!$artistExists) {
+        if (!$artist) {
             return response()->json([
                 'error' => 'no_such_record',
                 'message' => 'no artist exists with the specified id',
@@ -56,6 +56,8 @@ class ArtistController
         $prev = $tracks->previousCursor();
 
         $data = [
+            'id' => $id,
+            'name' => $artist->name,
             'tracks' => $tracks->items(),
             'navigation' => [
                 'limit' => $limit,
@@ -67,7 +69,7 @@ class ArtistController
         if ($req->has('isApiReq')) {
             return response()->json($data);
         } else {
-            return Inertia::render('ArtistTracks', $data);
+            return Inertia::render('Artist', $data);
         }
     }
 }
