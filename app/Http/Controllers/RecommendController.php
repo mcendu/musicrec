@@ -14,7 +14,7 @@ class RecommendController
         $rowcount = intval($req->query("count", "10"));
 
         $tracks = DB::select(
-            'SELECT id, name, artist FROM tracks
+            'SELECT id, name, artist_id FROM tracks
                 TABLESAMPLE SYSTEM_ROWS(:count)',
             ['count' => $rowcount]
         );
@@ -27,14 +27,17 @@ class RecommendController
     }
 
     /** Recommend a list of tracks similar to a specific track. */
-    function recommend(Request $req)
+    function similarToTrack(Request $req, int $id)
     {
         $rowcount = intval($req->query("count", "10"));
 
+        // TODO: port to engines other than Postgres
         $tracks = DB::select(
-            'SELECT id, name, artist FROM tracks
-                TABLESAMPLE SYSTEM_ROWS(:count)',
-            ['count' => $rowcount]
+            'SELECT id, name, artist_id FROM tracks
+                WHERE id != :id
+                ORDER BY tags <=> (SELECT tags FROM tracks WHERE id = :id)
+                LIMIT :count;',
+            ['id' => $id, 'count' => $rowcount]
         );
 
         return response()->json($tracks);
