@@ -16,6 +16,6 @@ Route::get('dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/artists/{id}', [Controllers\ArtistController::class, 'tracks']);
-Route::get('/tracks/{id}', [Controllers\TrackController::class, 'show']);
+Route::get('/tracks/{id}', [Controllers\RecommendController::class, 'similarToTrack']);
 
 require __DIR__ . '/settings.php';

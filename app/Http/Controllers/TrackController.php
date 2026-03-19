@@ -41,16 +41,12 @@ class TrackController
             'urls' => $urls,
         ];
 
-        if ($req->has('isApiReq')) {
-            return response()
-                ->json($data)
-                ->header(
-                    'Last-Modified',
-                    date_create($track->updated_at)->format(DATE_RFC7231)
-                );
-        } else {
-            return Inertia::render('Track', $data);
-        }
+        return response()
+            ->json($data)
+            ->header(
+                'Last-Modified',
+                date_create($track->updated_at)->format(DATE_RFC7231)
+            );
     }
 
     function create(Request $request): JsonResponse
