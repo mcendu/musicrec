@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -13,10 +14,12 @@ class ArtistController
         $artist = DB::table('artists')->where('id', '=', $id)->first();
 
         if (!$artist) {
-            return response()->json([
-                'error' => 'no_such_record',
-                'message' => 'no artist exists with the specified id',
-            ], 404);
+            return errorResponse(
+                $req,
+                'no_such_record',
+                'no artist exists with the specified id',
+                Response::HTTP_NOT_FOUND
+            );
         }
 
         $data = [
@@ -41,10 +44,12 @@ class ArtistController
         $artist = DB::table('artists')->where('id', '=', $id)->first();
 
         if (!$artist) {
-            return response()->json([
-                'error' => 'no_such_record',
-                'message' => 'no artist exists with the specified id',
-            ], 404);
+            return errorResponse(
+                $req,
+                'no_such_record',
+                'no artist exists with the specified id',
+                Response::HTTP_NOT_FOUND
+            );
         }
 
         $tracks = DB::table('tracks')

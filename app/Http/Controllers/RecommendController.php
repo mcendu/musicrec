@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\TrackUrlResource;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -38,10 +37,12 @@ class RecommendController
         // fetch track's own data for quicker access from the frontend
         $track = Track::find($id);
         if (!$track) {
-            return response()->json([
-                'error' => 'no_such_record',
-                'message' => "No track with ID $id exists",
-            ], Response::HTTP_NOT_FOUND);
+            return errorResponse(
+                $req,
+                'no_such_record',
+                "No track with ID $id exists",
+                Response::HTTP_NOT_FOUND
+            );
         }
 
         // recommend tracks

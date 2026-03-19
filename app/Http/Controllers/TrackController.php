@@ -15,10 +15,12 @@ class TrackController
         $tracks = DB::table('tracks')->where('id', '=', $id)->get();
 
         if (count($tracks) == 0) {
-            return response()->json([
-                'error' => 'no_such_record',
-                'message' => "No track with ID $id exists",
-            ], Response::HTTP_NOT_FOUND);
+            return errorResponse(
+                $req,
+                'no_such_record',
+                "No track with ID $id exists",
+                Response::HTTP_NOT_FOUND
+            );
         }
 
         $track = $tracks[0];
@@ -84,10 +86,12 @@ class TrackController
                 ]
             );
         } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json([
-                'error' => 'record_exists',
-                'message' => "Track '$artist - $name' already exists"
-            ], Response::HTTP_CONFLICT);
+            return errorResponse(
+                $request,
+                'record_exists',
+                "Track '$artist - $name' already exists",
+                Response::HTTP_CONFLICT
+            );
         }
 
         return response()
@@ -97,7 +101,7 @@ class TrackController
             ->header('Location', route('track.show', ['id' => $id]));
     }
 
-    function delete(int $id)
+    function delete(Request $req, int $id)
     {
         $count = DB::transaction(function () use ($id) {
             DB::delete('DELETE FROM urls WHERE track_id=:id', ['id' => $id]);
@@ -105,10 +109,12 @@ class TrackController
         });
 
         if ($count == 0) {
-            return response()->json([
-                'error' => 'no_such_record',
-                'message' => "No track with ID $id exists"
-            ], Response::HTTP_NOT_FOUND);
+            return errorResponse(
+                $req,
+                'no_such_record',
+                "No track with ID $id exists",
+                Response::HTTP_NOT_FOUND
+            );
         }
 
         return response(null, Response::HTTP_NO_CONTENT);

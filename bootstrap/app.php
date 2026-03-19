@@ -14,6 +14,8 @@ use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
+use function App\Http\Controllers\errorResponse;
+
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__ . '/../routes/web.php',
@@ -43,15 +45,19 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (AuthenticationException $e, Request $req) {
             if ($req->is('api/*')) {
                 if ($req->user()) {
-                    return response()->json([
-                        'error' => 'access_denied',
-                        'message' => "you can't use this endpoint",
-                    ], 401);
+                    return errorResponse(
+                        $req,
+                        'access_denied',
+                        "you can't use this endpoint",
+                        403
+                    );
                 } else {
-                    return response()->json([
-                        'error' => 'unauthorized',
-                        'message' => 'this endpoint requires an access token',
-                    ], 401);
+                    return errorResponse(
+                        $req,
+                        'unauthorized',
+                        'this endpoint requires an access token',
+                        401
+                    );
                 }
             }
         });
