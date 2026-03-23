@@ -34,7 +34,7 @@ defineProps<{
             <h2 class="text-2xl mt-3">Listen</h2>
             <ul>
                 <li v-for="url in track.urls" :key="url.website">
-                    <a :href="url.url">{{ url.website }}</a>
+                    <a class="text-blue-600" :href="url.url">{{ url.website }}</a>
                 </li>
             </ul>
         </template>
