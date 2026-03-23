@@ -25,7 +25,7 @@ class RecommendController
         if ($req->has("isApiReq")) {
             return response()->json($tracks);
         } else {
-            return Inertia::render('Recommend', ['tracks' => $tracks]);
+            return Inertia::render('Recommend', ['recommendations' => $tracks]);
         }
     }
 
@@ -69,20 +69,22 @@ class RecommendController
         );
 
         $data = [
-            'id' => $track->id,
-            'name' => $track->name,
-            'artist' => [
-                'id' => $track->artist->id,
-                'name' => $track->artist->name,
+            'track' => [
+                'id' => $track->id,
+                'name' => $track->name,
+                'artist' => [
+                    'id' => $track->artist->id,
+                    'name' => $track->artist->name,
+                ],
+                'urls' => $track->urls->toResourceCollection()->all(),
             ],
-            'urls' => $track->urls->toResourceCollection()->all(),
             'recommendations' => $tracks,
         ];
 
         if ($req->has("isApiReq")) {
             return response()->json($data);
         } else {
-            return Inertia::render('Track', $data);
+            return Inertia::render('Recommend', $data);
         }
     }
 }
