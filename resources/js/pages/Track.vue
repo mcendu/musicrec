@@ -23,7 +23,9 @@ defineProps<{
             <h1>{{ name }}</h1>
             <small>
                 By
-                <Link :href="`/artists/${artist.id}`">{{ artist.name }}</Link>
+                <Link class="text-blue-600" :href="`/artists/${artist.id}`">{{
+                    artist.name
+                }}</Link>
             </small>
         </header>
         <h2>Listen</h2>
@@ -33,13 +35,23 @@ defineProps<{
             </li>
         </ul>
         <h2>You may also like</h2>
-        <ul>
-            <li v-for="track in recommendations" :key="track.id">
-                <Link :href="`/tracks/${track.id}`">{{ track.name }}</Link>
-                <Link v-if="track.artist" :href="`/artists/${track.artist.id}`">
-                    {{ track.artist.name }}
-                </Link>
-            </li>
-        </ul>
+        <table>
+            <tr v-for="track in recommendations" :key="track.id">
+                <td>
+                    <Link class="text-blue-600" :href="`/tracks/${track.id}`">
+                        {{ track.name }}
+                    </Link>
+                </td>
+                <td>
+                    <Link
+                        class="text-blue-600"
+                        v-if="track.artist"
+                        :href="`/artists/${track.artist.id}`"
+                    >
+                        {{ track.artist.name }}
+                    </Link>
+                </td>
+            </tr>
+        </table>
     </article>
 </template>

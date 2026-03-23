@@ -16,6 +16,8 @@ defineProps<{
 </script>
 
 <template>
-    <p>{{ message }}</p>
-    <p><Link href="/">Back to home.</Link></p>
+    <article>
+        <p>{{ message }}</p>
+        <p><Link href="/">Back to home.</Link></p>
+    </article>
 </template>
