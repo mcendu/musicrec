@@ -20,10 +20,10 @@ defineProps<{
 </script>
 
 <template>
-    <article class="my-4 max-w-xl">
+    <article class="mx-auto my-4 max-w-2xl">
         <template v-if="track">
             <header>
-                <h1>{{ track.name }}</h1>
+                <h1 class="text-3xl font-bold">{{ track.name }}</h1>
                 <small>
                     By
                     <Link class="text-blue-600" :href="`/artists/${track.artist.id}`">{{
@@ -31,19 +31,19 @@ defineProps<{
                     }}</Link>
                 </small>
             </header>
-            <h2>Listen</h2>
+            <h2 class="text-2xl mt-3">Listen</h2>
             <ul>
                 <li v-for="url in track.urls" :key="url.website">
                     <a :href="url.url">{{ url.website }}</a>
                 </li>
             </ul>
         </template>
-        <h2 v-if="track">You may also like</h2>
+        <h2 v-if="track" class="text-2xl mt-3">You may also like</h2>
         <template v-else>
-            <h1>Welcome to musicrec</h1>
-            <h2>Random tracks for you</h2>
+            <h1 class="text-3xl font-bold">Welcome to musicrec</h1>
+            <h2 class="text-2xl mt-3">Random tracks for you</h2>
         </template>
-        <table>
+        <table class="w-md table-auto divide-y divide-neutral-200 dark:divide-neutral-700">
             <tr v-for="t in recommendations" :key="t.id">
                 <td>
                     <Link class="text-blue-600" :href="`/tracks/${t.id}`">
