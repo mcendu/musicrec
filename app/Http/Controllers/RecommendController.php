@@ -16,10 +16,23 @@ class RecommendController
     {
         $rowcount = intval($req->query("count", "10"));
 
-        $tracks = DB::select(
-            'SELECT id, name, artist_id FROM tracks
-                TABLESAMPLE SYSTEM_ROWS(:count)',
-            ['count' => $rowcount]
+        $tracks = array_map(
+            function ($t) {
+                return [
+                    'id' => $t->id,
+                    'name' => $t->name,
+                    'artist' => [
+                        'id' => $t->artist_id,
+                        'name' => $t->artist_name,
+                    ],
+                ];
+            },
+            DB::select(
+                'SELECT t.id, t.name, t.artist_id, a.name AS artist_name
+                    FROM tracks AS t TABLESAMPLE SYSTEM_ROWS(:count)
+                    LEFT JOIN artists AS a ON t.artist_id = a.id;',
+                ['count' => $rowcount]
+            )
         );
 
         if ($req->has("isApiReq")) {
